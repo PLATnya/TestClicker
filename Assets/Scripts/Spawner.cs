@@ -36,7 +36,7 @@ public class Spawner : MonoBehaviour
         Vector3 startPosition = cubeTransform.position;
         while (t < 1)
         {
-            cubeTransform.position = Vector3.Lerp(startPosition, _destinationPoint, t);
+            cubeTransform.position = Vector3.LerpUnclamped(startPosition, _destinationPoint, t);
             t += Time.deltaTime * _speed;
             yield return null;
         }
@@ -72,8 +72,15 @@ public class Spawner : MonoBehaviour
     
     public void SetSpawnDelayFromUserInput(String input)
     {
+
         float newSpawnDelay;
-        if (float.TryParse(input, out newSpawnDelay) && newSpawnDelay>0) _spawnDelay= newSpawnDelay;
+        if (float.TryParse(input, out newSpawnDelay) && newSpawnDelay > 0)
+        {
+            _spawnDelay= newSpawnDelay;
+            StopAllCoroutines();
+            StartCoroutine(SpawnCubes());
+            _spawnPool.UnspawnAll();
+        }
         _uiSpawnerManager.SetSpawnDelay(_spawnDelay);
     }
 }

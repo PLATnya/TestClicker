@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -17,6 +18,10 @@ public class SpawnPool : MonoBehaviour
         _pooledArray = new GameObject[_maxCapacity];
     }
 
+    public void UnspawnAll()
+    {
+        for(int i = 0;i<_pooledArray.Length;++i) if(_pooledArray[i]) _pooledArray[i].SetActive(false);
+    }
     public GameObject Spawn()
     {
         if (_lastIndex < _maxCapacity - 1)
