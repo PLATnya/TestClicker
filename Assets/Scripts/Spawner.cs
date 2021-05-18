@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,45 +10,24 @@ public class Spawner : MonoBehaviour
     [SerializeField]
     private SpawnPool _spawnPool;
 
-    private float Speed
-    {
-        get => Speed;
-        set
-        {
-            Speed = value;
-            _uiSpawnerManager.SetSpeed(value);
-        }
-    }
+    [SerializeField]
+    private float _speed =1;
 
-    private float Distance{
-        get => Distance;
-        set
-        {
-            if (value < 0) Distance = 0;
-            else Distance = value;
-            _uiSpawnerManager.SetDistance(value);
-        }
-        
-    }
+    [SerializeField]
+    private float _distance = 20;
 
-    private float SpawnDelay
-    {
-        get => SpawnDelay;
-        set
-        {
-            if (SpawnDelay < 0) SpawnDelay = 0;
-            else SpawnDelay = value;
-            _uiSpawnerManager.SetSpawnDelay(value);
-        }
-    }
+    [SerializeField]
+    private float _spawnDelay = 0.5f;
 
     [SerializeField] private Transform _spawnPoint;
 
     private Vector3 _destinationPoint;
     void Start()
     {
-        _destinationPoint = _spawnPoint.position + transform.forward * Distance;
         StartCoroutine(SpawnCubes());
+        _uiSpawnerManager.SetSpeed(_speed);
+        _uiSpawnerManager.SetDistance(_distance);
+        _uiSpawnerManager.SetSpawnDelay(_spawnDelay);
     }
 
     IEnumerator MoveCube(Transform cubeTransform)
@@ -57,7 +37,7 @@ public class Spawner : MonoBehaviour
         while (t < 1)
         {
             cubeTransform.position = Vector3.Lerp(startPosition, _destinationPoint, t);
-            t += Time.deltaTime * Speed;
+            t += Time.deltaTime * _speed;
             yield return null;
         }
         cubeTransform.gameObject.SetActive(false);
@@ -70,7 +50,30 @@ public class Spawner : MonoBehaviour
             Transform spawnedCubeTransform = _spawnPool.Spawn().transform;
             spawnedCubeTransform.position = _spawnPoint.position;
             StartCoroutine(MoveCube(spawnedCubeTransform));
-            yield return new WaitForSeconds(SpawnDelay);
+            yield return new WaitForSeconds(_spawnDelay);
         }
+    }
+
+
+
+    public void SetSpeedFromUserInput(String input)
+    {
+        float newSpeed;
+        if (float.TryParse(input, out newSpeed)) _speed = newSpeed;
+        _uiSpawnerManager.SetSpeed(_speed);
+    }
+    public void SetDistanceFromUserInput(String input)
+    {
+        float newDistance;
+        if (float.TryParse(input, out newDistance)&& newDistance>0) _distance= newDistance;
+        _uiSpawnerManager.SetDistance(_distance);
+        _destinationPoint = _spawnPoint.position + transform.forward * _distance;
+    }
+    
+    public void SetSpawnDelayFromUserInput(String input)
+    {
+        float newSpawnDelay;
+        if (float.TryParse(input, out newSpawnDelay) && newSpawnDelay>0) _spawnDelay= newSpawnDelay;
+        _uiSpawnerManager.SetSpawnDelay(_spawnDelay);
     }
 }

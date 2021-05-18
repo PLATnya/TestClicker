@@ -20,6 +20,6 @@ public class UISpawnerManager : MonoBehaviour
     }
     public void SetSpawnDelay(float spawnDelay)
     {
-        _distanceInputField.text = spawnDelay.ToString();
-    }
+        _spawnDelayInputField.text = spawnDelay.ToString();
+    }   
 }
