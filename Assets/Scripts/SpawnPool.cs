@@ -11,9 +11,8 @@ public class SpawnPool : MonoBehaviour
     private int _maxCapacity = 10;
 
     private int _lastIndex = 0;
-    
-    
-    void Start()
+
+    void Awake()
     {
         _pooledArray = new GameObject[_maxCapacity];
     }
@@ -29,12 +28,18 @@ public class SpawnPool : MonoBehaviour
         }
         else
         {
+            GameObject spawningObject = _pooledArray[0];
             for (int i = 0; i < _pooledArray.Length; ++i)
             {
-                if (!_pooledArray[i].activeInHierarchy) return _pooledArray[i];
+                if (_pooledArray[i]&&!_pooledArray[i].activeInHierarchy)
+                {
+                    spawningObject = _pooledArray[i];
+                    break;
+                }
             }
 
-            return _pooledArray[0];
+            spawningObject.SetActive(true);
+            return spawningObject;
         }
     }
 } 
