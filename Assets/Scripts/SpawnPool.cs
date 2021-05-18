@@ -37,8 +37,4 @@ public class SpawnPool : MonoBehaviour
             return _pooledArray[0];
         }
     }
-    void Update()
-    {
-        
-    }
-}
+} 
